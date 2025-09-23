@@ -4,6 +4,8 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Navigation, routes } from "./navigation";
 import { Filters } from "./filters";
+import { ClerkLoaded, UserButton, ClerkLoading } from "@clerk/nextjs";
+import { Loader2 } from "lucide-react";
 
 
 export const Header = () => {
@@ -27,12 +29,12 @@ export const Header = () => {
                         <div className="flex items-center sm:px-8">
                             <Navigation />
                         </div>
-                        {/* <ClerkLoaded>
-                            <UserButton afteerSignOutUrl="/"/>
+                        <ClerkLoaded>
+                            <UserButton afterSignOutUrl="/"/>
                         </ClerkLoaded>
                         <ClerkLoading>
                             <Loader2 className="size-8 animate-spin text-slate-400"/>
-                        </ClerkLoading> */}
+                        </ClerkLoading>
                     </div>
 
                 {/* Auth here */}

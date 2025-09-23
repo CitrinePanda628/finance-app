@@ -4,6 +4,8 @@ import "./globals.css";
 import { SheetAccountProvider } from "../providers/sheet-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { QueryProvider } from "@/providers/query-provider";
+import { ClerkProvider } from  '@clerk/nextjs'
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,6 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <ClerkProvider>
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -38,5 +41,6 @@ export default function RootLayout({
         </QueryProvider>
       </body>
     </html>
+    </ClerkProvider>
   );
 }
