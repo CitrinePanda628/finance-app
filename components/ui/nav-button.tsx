@@ -22,7 +22,7 @@ export const NavButton = ({
       size="sm"
       variant="outline"
       className={cn(
-        "w-full lg:w-auto justify-between font-normal",
+        "w-full  text-2xl lg:w-auto justify-between font-normal",
         "hover:bg-white/20 hover:text-white border-none",
         "focus-visible:ring-offset-0 focus-visible:ring-transparent",
         "outline-none text-white focus:bg-white/30 transition",

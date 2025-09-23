@@ -49,7 +49,7 @@ export const Navigation = () => {
               size="sm"
               className="font-normal bg-white/20 hover:bg-white/30 text-white border-none focus-visible:ring-offset-0 focus-visible:ring-transparent outline-none transition"
             >
-              <Menu className="size-4" />
+              <Menu className="size-6" />
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="px-4">

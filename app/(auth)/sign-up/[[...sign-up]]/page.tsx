@@ -34,7 +34,6 @@ export default function Page() {
                         typingSpeed={70}
                         pauseDuration={2000}
                         showCursor={true}
-                        cursorCharacter="▊"
                         className="text-5xl font-bold leading-tight"
                         textColors={['#ffffff', '#ffffff', '#ffffff', '#ffffff']}
                     />

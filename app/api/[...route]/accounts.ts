@@ -1,14 +1,13 @@
 import { db } from "@/src/db";
 import { accounts } from "@/src/schema";
+import { clerkMiddleware } from "@clerk/nextjs/server";
 import { and, eq, inArray } from "drizzle-orm";
 import { Hono } from "hono"
-
 
 const app = new Hono()
 
 .get("/",
-    
-    // clerkMidleware(),
+
     async (c) => {
 
 // const auth = getAuth(c)

@@ -5,7 +5,7 @@ export const CategoryTooltip = ({ active, payload }: any) => {
 
     if (!active || !payload || payload.length === 0) return null;
 
-    const name = payload[0].payload.name /100;
+    const name = payload[0].payload.name;
     const value = payload[0].value /100;
 
     return (
