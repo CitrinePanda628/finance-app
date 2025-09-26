@@ -6,9 +6,11 @@ import z, { date } from "zod";
 import { zValidator } from "@hono/zod-validator";
 import { parse, subDays } from "date-fns";
 import { tr } from "zod/v4/locales";
+import { currentUser } from "@clerk/nextjs/server";
 
 
 const app = new Hono()
+
 
 .get(
     "/",
@@ -17,10 +19,12 @@ const app = new Hono()
         to: z.string().optional(),
         accountId: z.string().optional(),
     })),
-    // clerkMidleware(),
      async (c) => {
 
-// const auth = getAuth(c)
+        const user = await currentUser();
+        if (!user) {
+            return c.json({ error: "Unauthorized" }, 401);
+        }
 
         const { from, to, accountId } = c.req.valid("query");
         
@@ -54,7 +58,7 @@ const app = new Hono()
         .where(
             and(
                 accountId ? eq(transactions.accountId, accountId) : undefined,
-                // eq(accounts.userId, auth.userId),
+                eq(accounts.userId, user.id),
                 gte(transactions.date, startDate),
                 lte(transactions.date, endDate)
             )
@@ -69,10 +73,6 @@ const app = new Hono()
 
 .get("/:id" , 
     
-//     zValidator("params", z.object({
-//         id: z.string().optional()
-//     }))
-// ,
     async (c) => {
 
         const id = c.req.param("id")
@@ -112,7 +112,7 @@ async (c) => {
       accountId: body.accountId,
       categoryId: body.categoryId || null,
       payee: body.payee,
-      amount: body.amount,
+      amount: body.amount * 100,
       notes: body.notes || null
     }).returning()
 
@@ -218,7 +218,10 @@ async (c) => {
 
     const id = c.req.param("id");
     const rawvalues = await c.req.json();
-
+  const user = await currentUser();
+  if (!user) {
+    return c.json({ error: "Unauthorized" }, 401);
+  }
     if(!id) {
         return c.json({error: "Missing Id"}, 400)
     }
@@ -234,7 +237,7 @@ async (c) => {
         .innerJoin(accounts, eq(transactions.accountId, accounts.id))
         .where(and(
             eq(transactions.id, id),
-            // eq(accounts.userId, auth.userId)
+            eq(accounts.userId, user.id)
         ))
     )
 

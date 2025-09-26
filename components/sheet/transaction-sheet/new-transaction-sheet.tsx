@@ -59,7 +59,7 @@ export const NewTransactionSheet = () => {
 
 
 const handleSubmit = (values: FormValues) => {
-    const amountInMiliunits = convertAmountToMiliUnits(parseFloat(values.amount));
+    const amountInMiliunits =(values.amount);
     mutate({
         ...values,
         amount: amountInMiliunits,

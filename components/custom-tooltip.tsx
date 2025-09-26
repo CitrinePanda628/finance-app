@@ -6,7 +6,7 @@ export const CustomTooltip = ({ active, payload }: any) => {
 
     const date = payload[0].payload.date;
     const income = payload[0].value / 100;
-    const expenses = payload[1].value / 100;
+    const expenses = (payload[1].value / 100) * -1;
     const net = income - expenses;
 
     return (

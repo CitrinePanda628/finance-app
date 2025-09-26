@@ -1,6 +1,7 @@
 import { calculatePercentageChange, fillMissingDays } from "@/lib/utils";
 import { db } from "@/src/db";
 import { accounts, categories, transactions } from "@/src/schema";
+import { currentUser } from "@clerk/nextjs/server";
 import { zValidator } from "@hono/zod-validator";
 import { differenceInDays, parse, subDays } from "date-fns";
 import { and, eq, gte, lt, lte, sql, sum, desc } from "drizzle-orm";
@@ -20,12 +21,12 @@ const app = new Hono()
             })
         ),
         async (c) => {
-            //const auth = getAuth(c)
+            const auth = await currentUser();
+            if (!auth) {
+                return c.json({ error: "Unauthorized" }, 401);
+            }
 
             const { from, to, accountId } = c.req.valid("query");
-            // if(!auth?.userId){
-            //     return c.json({error: "Unauthorized"}, 401)
-            // }
 
             const defaultTo = new Date()
             const defaultFrom = subDays(defaultTo, 30)
@@ -43,7 +44,7 @@ const app = new Hono()
             const lastPeriodEndDate = subDays(endDate, periodLength);
 
             async function fetchFinancialData(
-                //userId: string,
+                userId: string,
                 startDate: Date,
                 endDate: Date
             ){
@@ -64,7 +65,7 @@ const app = new Hono()
                 .where(
                     and(
                         accountId ? eq(transactions.accountId, accountId) : undefined,
-                        //eq(accounts.userId, userId)
+                        eq(accounts.userId, userId),
                         gte(transactions.date, startDate),
                         lte(transactions.date, endDate)
                     )
@@ -73,12 +74,12 @@ const app = new Hono()
 
 
             const [currentPeriod] = await fetchFinancialData(
-                //auth.userId,
+                auth.id,
                 startDate,
                 endDate,
             )
             const [lastPeriod] = await fetchFinancialData(
-                //auth.userId,
+                auth.id,
                 lastPeriodStartDate,
                 lastPeriodEndDate,
             )
@@ -121,7 +122,7 @@ const app = new Hono()
                 .where(
                     and(
                         accountId ? eq(transactions.accountId, accountId) : undefined,
-                        //eq(accounts.userId, auth.userId)
+                        eq(accounts.userId, auth.id),
                         lt(transactions.amount, 0),
                         gte(transactions.date, startDate),
                         lte(transactions.date, endDate)
@@ -162,9 +163,7 @@ const app = new Hono()
                 .where(
                     and(
                         accountId ? eq(transactions.accountId, accountId) : undefined,
-                        //eq(accounts.userId, auth.userId)
-                       
-                        //lt(transactions.amount, 0),
+                        eq(accounts.userId, auth.id),
                         gte(transactions.date, startDate),
                         lte(transactions.date, endDate)
                     )

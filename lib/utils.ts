@@ -18,7 +18,6 @@ export function convertAmountToMiliUnits(amount: number){
 }
 
 export function formatCurrency(value: number) {
-  // const finalValue = convertAmountFromMiliUnits(value)
 
   return Intl.NumberFormat("en-US", {
     style: "currency",
